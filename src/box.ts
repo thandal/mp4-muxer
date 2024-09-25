@@ -192,7 +192,7 @@ export const tkhd = (
 /** Media Box: Describes and define a track's media type and sample data. */
 export const mdia = (track: Track, creationTime: number) => box('mdia', null, [
 	mdhd(track, creationTime),
-	hdlr(track.info.type === 'video' ? 'vide' : track.info.type === 'audio' ? 'soun' : 'meta'),
+	hdlr(track.info.type === 'video' ? 'vide' : track.info.type === 'audio' ? 'soun' : 'meta', track.info.name),
 	minf(track)
 ]);
 
@@ -221,13 +221,13 @@ export const mdhd = (
 };
 
 /** Handler Reference Box: Specifies the media handler component that is to be used to interpret the media's data. */
-export const hdlr = (componentSubtype: string) => fullBox('hdlr', 0, 0, [
+export const hdlr = (componentSubtype: string, componentName: string) => fullBox('hdlr', 0, 0, [
 	ascii('mhlr'), // Component type
 	ascii(componentSubtype), // Component subtype
 	u32(0), // Component manufacturer
 	u32(0), // Component flags
 	u32(0), // Component flags mask
-	ascii('mp4-muxer-hdlr', true) // Component name
+	ascii(componentName, true) // Component name
 ]);
 
 /**
@@ -428,7 +428,8 @@ export const soundSampleDescription = (
 export const mett = (
 	track: DataTrack
 ) => {
-	return box('mett', [
+//		return box('mett', [
+	return fullBox('mett', 0, 0, [
 		ascii(track.info.content_encoding, true),
 		ascii(track.info.mime_format, true)
 	]);

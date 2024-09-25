@@ -49,6 +49,7 @@ export interface Track {
 	id: number,
 	info: {
 		type: 'video',
+		name: 'video',
 		codec: VideoOptions['codec'],
 		width: number,
 		height: number,
@@ -56,12 +57,14 @@ export interface Track {
 		decoderConfig: VideoDecoderConfig
 	} | {
 		type: 'audio',
+		name: 'audio',
 		codec: AudioOptions['codec'],
 		numberOfChannels: number,
 		sampleRate: number,
 		decoderConfig: AudioDecoderConfig
 	} | {
 		type: 'data',
+		name: 'data',
 		content_encoding: string,
 		mime_format: string
 	},
@@ -313,6 +316,7 @@ export class Muxer<T extends Target> {
 				id: this.#trackIdCounter++,
 				info: {
 					type: 'video',
+					name: 'mp4-muxer-hdlr',
 					codec: this.#options.video.codec,
 					width: this.#options.video.width,
 					height: this.#options.video.height,
@@ -339,6 +343,7 @@ export class Muxer<T extends Target> {
 				id: this.#trackIdCounter++,
 				info: {
 					type: 'audio',
+					name: 'mp4-muxer-hdlr',
 					codec: this.#options.audio.codec,
 					numberOfChannels: this.#options.audio.numberOfChannels,
 					sampleRate: this.#options.audio.sampleRate,
@@ -375,11 +380,12 @@ export class Muxer<T extends Target> {
 		}
 	}
 
-	addDataTrack(contentEncoding = 'binary', mimeFormat = 'application/data') {
+	addDataTrack(contentEncoding = 'binary', mimeFormat = 'application/data', name = 'data') {
 		this.#dataTracks.push( {
 			id: this.#trackIdCounter++,
 			info: {
 				type: 'data',
+				name: name,
 				content_encoding: contentEncoding,
 				mime_format: mimeFormat
 			},

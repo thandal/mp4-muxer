@@ -262,7 +262,7 @@ var tkhd = (track, creationTime) => {
 };
 var mdia = (track, creationTime) => box("mdia", null, [
   mdhd(track, creationTime),
-  hdlr(track.info.type === "video" ? "vide" : track.info.type === "audio" ? "soun" : "meta"),
+  hdlr(track.info.type === "video" ? "vide" : track.info.type === "audio" ? "soun" : "meta", track.info.name),
   minf(track)
 ]);
 var mdhd = (track, creationTime) => {
@@ -288,7 +288,7 @@ var mdhd = (track, creationTime) => {
     // Quality
   ]);
 };
-var hdlr = (componentSubtype) => fullBox("hdlr", 0, 0, [
+var hdlr = (componentSubtype, componentName) => fullBox("hdlr", 0, 0, [
   ascii("mhlr"),
   // Component type
   ascii(componentSubtype),
@@ -299,7 +299,7 @@ var hdlr = (componentSubtype) => fullBox("hdlr", 0, 0, [
   // Component flags
   u32(0),
   // Component flags mask
-  ascii("mp4-muxer-hdlr", true)
+  ascii(componentName, true)
   // Component name
 ]);
 var minf = (track) => box("minf", null, [
@@ -468,7 +468,7 @@ var soundSampleDescription = (compressionType, track) => box(compressionType, [
   AUDIO_CODEC_TO_CONFIGURATION_BOX[track.info.codec](track)
 ]);
 var mett = (track) => {
-  return box("mett", [
+  return fullBox("mett", 0, 0, [
     ascii(track.info.content_encoding, true),
     ascii(track.info.mime_format, true)
   ]);
@@ -1211,11 +1211,12 @@ var Muxer = class {
     __privateMethod(this, _prepareMediaTracks, prepareMediaTracks_fn).call(this);
     __privateMethod(this, _writeHeader, writeHeader_fn).call(this);
   }
-  addDataTrack(contentEncoding = "binary", mimeFormat = "application/data") {
+  addDataTrack(contentEncoding = "binary", mimeFormat = "application/data", name = "data") {
     __privateGet(this, _dataTracks).push({
       id: __privateWrapper(this, _trackIdCounter)._++,
       info: {
         type: "data",
+        name,
         content_encoding: contentEncoding,
         mime_format: mimeFormat
       },
@@ -1581,6 +1582,7 @@ prepareMediaTracks_fn = function() {
       id: __privateWrapper(this, _trackIdCounter)._++,
       info: {
         type: "video",
+        name: "mp4-muxer-hdlr",
         codec: __privateGet(this, _options).video.codec,
         width: __privateGet(this, _options).video.width,
         height: __privateGet(this, _options).video.height,
@@ -1606,6 +1608,7 @@ prepareMediaTracks_fn = function() {
       id: __privateWrapper(this, _trackIdCounter)._++,
       info: {
         type: "audio",
+        name: "mp4-muxer-hdlr",
         codec: __privateGet(this, _options).audio.codec,
         numberOfChannels: __privateGet(this, _options).audio.numberOfChannels,
         sampleRate: __privateGet(this, _options).audio.sampleRate,
