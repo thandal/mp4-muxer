@@ -468,8 +468,13 @@ var soundSampleDescription = (compressionType, track) => box(compressionType, [
   AUDIO_CODEC_TO_CONFIGURATION_BOX[track.info.codec](track)
 ]);
 var mett = (track) => {
-  return fullBox("mett", 0, 0, [
+  return box("mett", [
+    Array(6).fill(0),
+    // Reserved
+    u16(1),
+    // Data reference index
     ascii(track.info.content_encoding, true),
+    // optional
     ascii(track.info.mime_format, true)
   ]);
 };

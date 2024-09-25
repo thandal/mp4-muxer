@@ -428,9 +428,10 @@ export const soundSampleDescription = (
 export const mett = (
 	track: DataTrack
 ) => {
-//		return box('mett', [
-	return fullBox('mett', 0, 0, [
-		ascii(track.info.content_encoding, true),
+	return box('mett', [
+		Array(6).fill(0), // Reserved
+		u16(1), // Data reference index
+		ascii(track.info.content_encoding, true),  // optional
 		ascii(track.info.mime_format, true)
 	]);
 };
