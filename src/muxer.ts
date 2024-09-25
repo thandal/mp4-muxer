@@ -389,7 +389,7 @@ export class Muxer<T extends Target> {
 				content_encoding: contentEncoding,
 				mime_format: mimeFormat
 			},
-			timescale: 0.001,
+			timescale: 10_000,
 			samples: [],
 			finalizedChunks: [],
 			currentChunk: null,
@@ -661,7 +661,7 @@ export class Muxer<T extends Target> {
 		let adjusted = this.#validateTimestamp(presentationTimestampInSeconds, decodeTimestampInSeconds, track);
 		presentationTimestampInSeconds = adjusted.presentationTimestamp;
 		decodeTimestampInSeconds = adjusted.decodeTimestamp;
-
+		
 		if (meta?.decoderConfig) {
 			if (track.info.decoderConfig === null) {
 				track.info.decoderConfig = meta.decoderConfig;
