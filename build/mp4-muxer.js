@@ -1253,7 +1253,7 @@ var Mp4Muxer = (() => {
           content_encoding: contentEncoding,
           mime_format: mimeFormat
         },
-        timescale: 1e4,
+        timescale: GLOBAL_TIMESCALE,
         samples: [],
         finalizedChunks: [],
         currentChunk: null,

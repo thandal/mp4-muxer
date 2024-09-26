@@ -389,7 +389,7 @@ export class Muxer<T extends Target> {
 				content_encoding: contentEncoding,
 				mime_format: mimeFormat
 			},
-			timescale: 10_000,
+			timescale: GLOBAL_TIMESCALE,
 			samples: [],
 			finalizedChunks: [],
 			currentChunk: null,
